@@ -24,3 +24,10 @@ def xor(a: hex, b: hex):
             string += str(orange(int(a[i]), int(b[i])))
 
     return string.zfill(8)
+
+
+
+def pading_block(block, size=16, pad_value='0c'):
+    while len(block) < size:
+        block.append(pad_value)
+    return block
