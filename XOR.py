@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def orange(x: bin, y: bin):
     result = 0
     if x == False and y == False:
