@@ -1,5 +1,7 @@
 from XOR import hex_xor_matrices
 from XOR import pading_block
+from XOR import SBOX
+from XOR import replacement_S_box
 import secrets
 import numpy as np
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
@@ -51,9 +53,6 @@ def aes(message: str, p, g):
         result_numbers = vectorized_sbox(RK_xor)
         SubBytes = np.array([[f'{x:02x}' for x in row] for row in result_numbers])
         #print(SubBytes)
-
-
-
 
 
 
