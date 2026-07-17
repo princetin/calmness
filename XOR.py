@@ -85,6 +85,37 @@ def mix_column(a0, a1, a2, a3):
     return b0, b1, b2, b3
 
 
+RCON = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36]
+
+
+def rot_word(word):
+    return word[1:] + word[:1]
+
+
+def sub_word(word):
+    return [f'{replacement_S_box(int(b, 16)):02x}' for b in word]
+
+
+def key_expansion(key_matrix, rounds=10):
+    # key_matrix: 4x4 массив hex-строк, столбцы - "слова" (как short_key_matrix в AES.py)
+    words = [list(key_matrix[:, c]) for c in range(4)]
+
+    for i in range(4, 4 * (rounds + 1)):
+        temp = words[i - 1]
+        if i % 4 == 0:
+            temp = sub_word(rot_word(temp))
+            temp = [f'{int(temp[0], 16) ^ RCON[i // 4 - 1]:02x}'] + temp[1:]
+        new_word = [f'{int(words[i - 4][j], 16) ^ int(temp[j], 16):02x}' for j in range(4)]
+        words.append(new_word)
+
+    round_keys = []
+    for r in range(rounds + 1):
+        cols = words[r * 4:(r + 1) * 4]
+        round_keys.append(np.array(cols).T)
+
+    return round_keys
+
+
 def mix_columns(matrix):
     new_matrix = [[0] * 4 for _ in range(4)]
 
