@@ -1,87 +1,261 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Тест CSS</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATLAS — studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F4EE;
+    --ink:#211F1A;
+    --ink-soft:#4A4740;
+    --muted:#98937F;
+    --hair:#DAD4C2;
+    --accent:#33415C;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    overflow-x:hidden;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
 
-    <style>
-        /* ===== ЭТО CSS ===== */
-        body {
-            font-family: Arial, sans-serif;
-            background: #f0f4ff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:22px 32px;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    flex-shrink:0;
+    z-index:5;
+  }
+  header .brand{
+    color:var(--ink);
+    font-weight:500;
+    letter-spacing:0.18em;
+  }
+  nav{display:flex;gap:26px;}
+  nav a{
+    color:var(--ink-soft);
+    text-decoration:none;
+    position:relative;
+    transition:color .25s ease;
+  }
+  nav a:hover{color:var(--ink);}
+  nav a:hover::after{
+    content:"";
+    position:absolute;
+    left:0;right:0;
+    bottom:-6px;
+    height:1px;
+    background:var(--accent);
+  }
+  @media (max-width:720px){
+    nav{display:none;}
+  }
 
-        .card {
-            background: white;
-            padding: 40px 60px;
-            border-radius: 20px;
-            box-shadow: 0 8px 25px rgba(0, 0, 255, 0.15);
-            text-align: center;
-            transition: 0.3s;
-        }
+  main{
+    position:relative;
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:0;
+  }
 
-        .card:hover {
-            transform: scale(1.03);
-            box-shadow: 0 12px 35px rgba(0, 0, 255, 0.25);
-        }
+  #topo{
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    font-size:9.5px;
+    line-height:9.5px;
+    letter-spacing:0.5px;
+    color:var(--ink-soft);
+    white-space:pre;
+    user-select:none;
+    text-align:center;
+    margin:0;
+    opacity:0.92;
+  }
 
-        h1 {
-            color: #2c3e7a;
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
+  .center-mark{
+    position:absolute;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+    pointer-events:none;
+    z-index:3;
+    mix-blend-mode:difference;
+  }
+  .center-mark h1{
+    margin:0;
+    font-size:clamp(28px,5vw,54px);
+    font-weight:500;
+    letter-spacing:0.06em;
+    color:var(--paper);
+  }
+  .center-mark p{
+    margin:10px 0 0;
+    font-size:11px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--paper);
+    opacity:0.75;
+  }
 
-        p {
-            color: #555;
-            font-size: 18px;
-            margin: 10px 0;
-        }
+  footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 32px 24px;
+    font-size:10.5px;
+    letter-spacing:0.08em;
+    color:var(--muted);
+    flex-shrink:0;
+    z-index:5;
+  }
+  footer .coords{
+    font-variant-numeric:tabular-nums;
+  }
+  footer .scroll{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  footer .scroll .line{
+    width:24px;height:1px;
+    background:var(--hair);
+  }
 
-        .btn {
-            background: #4a6cf7;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-        }
-
-        .btn:hover {
-            background: #3355d4;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(74, 108, 247, 0.4);
-        }
-
-        .highlight {
-            color: #4a6cf7;
-            font-weight: bold;
-        }
-    </style>
+  @media (prefers-reduced-motion: reduce){
+    #topo{transition:none;}
+  }
+</style>
 </head>
 <body>
 
-    <!-- ===== ЭТО HTML ===== -->
-    <div class="card">
-        <h1>🚀 CSS работает!</h1>
-        <p>Этот текст стилизован с помощью <span class="highlight">CSS</span></p>
-        <p style="font-size: 14px; color: #999;">Наведи мышку на карточку или кнопку</p>
-        <button class="btn" onclick="alert('Привет! JS тоже работает ✅')">
-            Нажми меня
-        </button>
-    </div>
+<header>
+  <div class="brand">ATLAS</div>
+  <nav>
+    <a href="#">index</a>
+    <a href="#">studio</a>
+    <a href="#">journal</a>
+    <a href="#">contact</a>
+  </nav>
+  <div>N.60</div>
+</header>
 
-    <!-- ===== ЭТО JS (для проверки) ===== -->
-    <script>
-        console.log('✅ Страница загружена');
-    </script>
+<main>
+  <pre id="topo"></pre>
+  <div class="center-mark">
+    <h1>ATLAS</h1>
+    <p>cartography for brands</p>
+  </div>
+</main>
+
+<footer>
+  <div class="coords" id="coords">59.9311&deg; N &nbsp;30.3609&deg; E</div>
+  <div class="scroll"><span class="line"></span> scroll</div>
+</footer>
+
+<script>
+const pre = document.getElementById('topo');
+const coordsEl = document.getElementById('coords');
+const ramp = " .:-=+*#%@";
+let mouseX = 0.5, mouseY = 0.5, targetX = 0.5, targetY = 0.5;
+let t = 0;
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function charDim(){
+  const span = document.createElement('span');
+  span.style.font = "9.5px 'IBM Plex Mono', monospace";
+  span.style.visibility = 'hidden';
+  span.textContent = 'M';
+  document.body.appendChild(span);
+  const w = span.getBoundingClientRect().width || 6.1;
+  document.body.removeChild(span);
+  return { w, h: 9.5 };
+}
+let dim = charDim();
+
+function buildGrid(){
+  const rect = document.querySelector('main').getBoundingClientRect();
+  const cols = Math.min(160, Math.floor(rect.width / dim.w));
+  const rows = Math.min(60, Math.floor(rect.height / dim.h));
+  return { cols, rows, rect };
+}
+let grid = buildGrid();
+
+function frame(){
+  t += reduced ? 0 : 0.018;
+  mouseX += (targetX - mouseX) * 0.06;
+  mouseY += (targetY - mouseY) * 0.06;
+
+  const { cols, rows } = grid;
+  let out = '';
+  const cx = mouseX * cols;
+  const cy = mouseY * rows;
+
+  for(let y = 0; y < rows; y++){
+    let row = '';
+    for(let x = 0; x < cols; x++){
+      const nx = x / cols - 0.5;
+      const ny = y / rows - 0.5;
+
+      let v = 0;
+      v += Math.sin(nx * 6.5 + t) * 0.5;
+      v += Math.cos(ny * 5.0 - t * 0.7) * 0.4;
+      v += Math.sin((nx + ny) * 8.0 + t * 0.5) * 0.3;
+      v -= (ny * ny * 3.2);
+
+      const dx = x - cx;
+      const dy = (y - cy) * (dim.w / dim.h) * 1.0;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const ripple = Math.cos(dist * 0.45 - t * 3.2) * Math.exp(-dist / 22);
+      v += ripple * 1.6;
+
+      v = (v + 2.6) / 5.2;
+      v = Math.max(0, Math.min(0.999, v));
+      const idx = Math.floor(v * ramp.length);
+      row += ramp[idx];
+    }
+    out += row + (y < rows - 1 ? '\n' : '');
+  }
+  pre.textContent = out;
+  requestAnimationFrame(frame);
+}
+
+function onMove(clientX, clientY){
+  const rect = grid.rect;
+  targetX = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+  targetY = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+
+  const lat = (59.9311 + (0.5 - targetY) * 20).toFixed(4);
+  const lon = (30.3609 + (targetX - 0.5) * 40).toFixed(4);
+  coordsEl.textContent = Math.abs(lat) + '\u00B0 ' + (lat >= 0 ? 'N' : 'S') + '   ' + Math.abs(lon) + '\u00B0 ' + (lon >= 0 ? 'E' : 'W');
+}
+
+window.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+window.addEventListener('touchmove', e => {
+  if(e.touches[0]) onMove(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive:true });
+
+window.addEventListener('resize', () => {
+  dim = charDim();
+  grid = buildGrid();
+});
+
+requestAnimationFrame(frame);
+</script>
 
 </body>
 </html>

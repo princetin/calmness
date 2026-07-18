@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тихо — переписка без шума</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c1c1a;
+    --ink-soft:#6b6a63;
+    --ink-faint:#a4a299;
+    --paper:#faf9f6;
+    --panel:#ffffff;
+    --line:#e7e4dc;
+    --accent:#4f6f63;
+    --accent-tint:#e7efec;
+    --accent-ink:#2c453c;
+    --noise-red:#c96a5c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;
+    line-height:1.6;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 32px;}
+  a{color:inherit;}
+
+  /* nav */
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:26px 0;
+  }
+  .logo{font-family:'Newsreader',serif;font-style:italic;font-size:21px;}
+  .nav-links{display:flex;gap:32px;font-size:14px;color:var(--ink-soft);}
+  .nav-cta{
+    font-size:13.5px;font-weight:500;border:1px solid var(--ink);border-radius:20px;
+    padding:8px 18px;background:var(--ink);color:var(--paper);cursor:pointer;
+  }
+
+  /* hero */
+  .hero{padding:80px 0 60px;display:grid;grid-template-columns:1.05fr 0.95fr;gap:60px;align-items:center;}
+  .eyebrow{font-size:12.5px;letter-spacing:0.06em;color:var(--accent-ink);
+    background:var(--accent-tint);display:inline-block;padding:5px 12px;border-radius:20px;margin-bottom:22px;}
+  h1{
+    font-family:'Newsreader',serif;font-weight:500;font-size:52px;line-height:1.12;
+    letter-spacing:-0.01em;
+  }
+  h1 em{font-style:italic;color:var(--accent-ink);}
+  .hero p.lede{font-size:17px;color:var(--ink-soft);margin:22px 0 30px;max-width:440px;}
+  .hero-actions{display:flex;gap:14px;align-items:center;}
+  .btn-primary{
+    background:var(--ink);color:var(--paper);border:none;border-radius:12px;
+    padding:14px 26px;font-size:14.5px;font-weight:500;cursor:pointer;
+  }
+  .btn-ghost{
+    background:none;border:1px solid var(--line);border-radius:12px;
+    padding:13px 22px;font-size:14.5px;color:var(--ink-soft);cursor:pointer;
+  }
+
+  /* hero visual: two message stacks, noisy vs quiet */
+  .compare{display:flex;flex-direction:column;gap:14px;}
+  .compare .panel{
+    border-radius:16px;padding:18px 20px;position:relative;overflow:hidden;
+  }
+  .panel.noisy{background:#fff;border:1px solid var(--line);}
+  .panel.quiet{background:var(--panel);border:1px solid var(--line);}
+  .panel-label{font-size:11px;color:var(--ink-faint);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.05em;}
+  .row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);margin-bottom:8px;}
+  .badge{
+    background:var(--noise-red);color:#fff;font-size:10.5px;font-weight:600;
+    border-radius:20px;padding:2px 7px;
+  }
+  .typing{color:var(--noise-red);}
+  .blink::after{content:'●●●';letter-spacing:2px;animation:blink 1.2s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0.2;}}
+  .checkmarks{color:#7a9dc9;font-size:12px;}
+  .quiet .row{color:var(--ink-soft);}
+  .quiet .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);
+    display:inline-block;animation:breathe 2.6s ease-in-out infinite;}
+  @keyframes breathe{0%,100%{opacity:0.4;}50%{opacity:1;}}
+
+  /* philosophy */
+  .philosophy{padding:70px 0;border-top:1px solid var(--line);}
+  .philosophy .grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:60px;}
+  .philosophy h2{font-family:'Newsreader',serif;font-weight:500;font-size:28px;line-height:1.3;}
+  .philosophy .kicker{font-size:12.5px;color:var(--ink-faint);letter-spacing:0.05em;margin-bottom:14px;}
+  .philosophy p{color:var(--ink-soft);font-size:15px;max-width:480px;}
+
+  /* features */
+  .features{padding:70px 0;border-top:1px solid var(--line);}
+  .features h2{font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin-bottom:44px;}
+  .feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:16px;overflow:hidden;}
+  .feature{background:var(--panel);padding:28px 30px;}
+  .feature .num{font-size:12px;color:var(--ink-faint);margin-bottom:14px;}
+  .feature h3{font-size:16.5px;font-weight:600;margin-bottom:8px;}
+  .feature p{font-size:14px;color:var(--ink-soft);}
+
+  /* cta footer */
+  .cta{
+    padding:80px 0;border-top:1px solid var(--line);text-align:center;
+  }
+  .cta h2{font-family:'Newsreader',serif;font-style:italic;font-weight:500;font-size:34px;margin-bottom:10px;}
+  .cta p{color:var(--ink-soft);font-size:15px;margin-bottom:28px;}
+  .cta-form{display:flex;gap:10px;justify-content:center;max-width:420px;margin:0 auto;}
+  .cta-form input{
+    flex:1;border:1px solid var(--line);border-radius:12px;padding:13px 16px;
+    font-size:14px;font-family:inherit;background:var(--panel);
+  }
+  .cta-form input:focus{outline:none;border-color:var(--accent);}
+
+  footer{padding:30px 0 50px;display:flex;justify-content:space-between;
+    font-size:12.5px;color:var(--ink-faint);border-top:1px solid var(--line);}
+
+  @media(max-width:760px){
+    .hero{grid-template-columns:1fr;padding-top:50px;}
+    h1{font-size:38px;}
+    .philosophy .grid{grid-template-columns:1fr;gap:24px;}
+    .feature-grid{grid-template-columns:1fr;}
+    .nav-links{display:none;}
+    .cta-form{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <div class="logo">тихо</div>
+    <div class="nav-links">
+      <a href="#philosophy">Философия</a>
+      <a href="#features">Возможности</a>
+    </div>
+    <button class="nav-cta">Войти</button>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <span class="eyebrow">переписка без гонки за нулём</span>
+      <h1>Мессенджер, который <em>не торопит</em> ответить</h1>
+      <p class="lede">Тихо убирает то, что превращает переписку в тревогу: счётчики непрочитанных, «печатает…», галочки прочтения. Остаётся только разговор.</p>
+      <div class="hero-actions">
+        <button class="btn-primary">Начать переписываться</button>
+        <button class="btn-ghost">Как это устроено ↓</button>
+      </div>
+    </div>
+
+    <div class="compare">
+      <div class="panel noisy">
+        <div class="panel-label">типичный мессенджер</div>
+        <div class="row">Дима <span class="badge">14</span></div>
+        <div class="row typing">Алина <span class="blink"></span></div>
+        <div class="row">Прочитано <span class="checkmarks">✓✓ 09:41</span></div>
+      </div>
+      <div class="panel quiet">
+        <div class="panel-label">тихо</div>
+        <div class="row"><span class="dot"></span> Дима — в сети</div>
+        <div class="row">Алина — ответит позже</div>
+        <div class="row">Настя — заглушено на день</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap">
+  <section class="philosophy" id="philosophy">
+    <div class="grid">
+      <div>
+        <div class="kicker">философия</div>
+        <h2>Не всё, что можно измерить, стоит показывать</h2>
+      </div>
+      <p>Счётчики и статусы «прочитано» появились как техническая возможность, а не как то, что нужно разговору. Они создают ощущение долга ответить именно сейчас. Тихо намеренно скрывает то, что не помогает общаться — и оставляет решение о темпе переписки за человеком, а не за интерфейсом.</p>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <h2>Что внутри</h2>
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="num">01</div>
+        <h3>Спокойный статус</h3>
+        <p>Вместо «печатает…» и галочек — «ответит позже» или «в сети». Меньше сигналов, требующих немедленной реакции.</p>
+      </div>
+      <div class="feature">
+        <div class="num">02</div>
+        <h3>Исчезающее и закреплённое</h3>
+        <p>Сообщения по умолчанию эфемерны, как живой разговор. Важное закрепляется одним касанием и остаётся.</p>
+      </div>
+      <div class="feature">
+        <div class="num">03</div>
+        <h3>Команды вместо кликов</h3>
+        <p>Символ «/» открывает палитру: напомнить, заглушить, найти сообщение — без блуждания по меню.</p>
+      </div>
+      <div class="feature">
+        <div class="num">04</div>
+        <h3>Выжимка вместо ленты</h3>
+        <p>Пропустил 200 сообщений в группе — увидишь короткую выжимку по темам, а не бесконечный скролл.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2>Начните с тишины</h2>
+    <p>Оставьте почту — пришлём приглашение одними из первых.</p>
+    <div class="cta-form">
+      <input type="email" placeholder="you@mail.com">
+      <button class="btn-primary">Получить доступ</button>
+    </div>
+  </section>
+
+  <footer>
+    <span>© тихо, 2026</span>
+    <span>сделано без счётчиков непрочитанных</span>
+  </footer>
+</div>
+
+</body>
+</html>

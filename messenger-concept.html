@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тихо — мессенджер</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c1c1a;
+    --ink-soft:#6b6a63;
+    --ink-faint:#a4a299;
+    --paper:#faf9f6;
+    --panel:#ffffff;
+    --line:#e7e4dc;
+    --accent:#4f6f63;
+    --accent-tint:#e7efec;
+    --accent-ink:#2c453c;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 16px;
+  }
+  .wordmark{
+    position:fixed;
+    top:28px;
+    left:36px;
+    font-family:'Newsreader',serif;
+    font-style:Garamond;
+    font-weight:400;
+    font-size:20px;
+    color:var(--ink);
+    letter-spacing:0.2px;
+  }
+  .wordmark span{color:var(--ink-faint);font-style:normal;font-family:'Inter',sans-serif;font-size:12px;margin-left:8px;}
+  .app{
+    width:920px;
+    max-width:100%;
+    height:600px;
+    background:var(--panel);
+    border-radius:20px;
+    border:1px solid var(--line);
+    box-shadow:0 24px 60px -30px rgba(28,28,26,0.18);
+    display:grid;
+    grid-template-columns:260px 1fr;
+    overflow:hidden;
+  }
+  /* sidebar */
+  .sidebar{border-right:1px solid var(--line);display:flex;flex-direction:column;}
+  .search{padding:20px 18px 12px;}
+  .search input{
+    width:100%;border:1px solid var(--line);background:var(--paper);
+    border-radius:10px;padding:9px 12px;font-size:13px;font-family:inherit;color:var(--ink);
+  }
+  .search input:focus{outline:none;border-color:var(--accent);}
+  .search .hint{font-size:11px;color:var(--ink-faint);margin:8px 2px 0;}
+  .thread-list{flex:1;overflow-y:auto;padding:4px 8px;}
+  .thread{
+    display:flex;align-items:center;gap:11px;padding:10px 10px;border-radius:12px;cursor:pointer;
+    transition:background 0.15s ease;
+  }
+  .thread:hover{background:var(--paper);}
+  .thread.active{background:var(--accent-tint);}
+  .avatar{
+    width:36px;height:36px;border-radius:50%;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:600;color:var(--accent-ink);background:var(--accent-tint);
+  }
+  .thread-name{font-size:13.5px;font-weight:500;margin:0;}
+  .thread-status{font-size:12px;color:var(--ink-faint);margin:2px 0 0;}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);margin-left:auto;flex-shrink:0;
+    animation:breathe 2.6s ease-in-out infinite;}
+  @keyframes breathe{0%,100%{opacity:0.45;}50%{opacity:1;}}
+
+  /* chat */
+  .chat{display:flex;flex-direction:column;}
+  .chat-header{
+    padding:18px 26px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .chat-header h2{font-family:'Newsreader',serif;font-weight:500;font-size:17px;margin:0;}
+  .chat-header p{font-size:12px;color:var(--ink-faint);margin:2px 0 0;}
+  .icon-btn{border:none;background:none;color:var(--ink-faint);cursor:pointer;padding:6px;border-radius:8px;}
+  .icon-btn:hover{background:var(--paper);color:var(--ink);}
+
+  .messages{flex:1;padding:22px 26px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;}
+  .msg{max-width:62%;padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.5;position:relative;}
+  .msg.in{align-self:flex-start;background:var(--paper);border:1px solid var(--line);border-bottom-left-radius:4px;}
+  .msg.out{align-self:flex-end;background:var(--accent-tint);color:var(--accent-ink);border-bottom-right-radius:4px;}
+  .msg.voice{font-style:italic;color:var(--ink-soft);background:transparent;border:1px dashed var(--line);}
+  .pin{position:absolute;top:-9px;right:-8px;font-size:13px;}
+  .day-label{align-self:center;font-size:11px;color:var(--ink-faint);margin:6px 0;}
+
+  .composer{
+    padding:16px 26px 20px;border-top:1px solid var(--line);
+    display:flex;align-items:flex-end;gap:10px;
+  }
+  .composer-box{
+    flex:1;border:1px solid var(--line);border-radius:14px;padding:15px 14px;
+    font-size:14px;font-family:inherit;color:var(--ink);background:var(--paper);
+    resize:none;height:20px;line-height:4px;overflow:hidden;
+  }
+  .composer-box:focus{outline:none;border-color:var(--accent);}
+  .send{
+    width:38px;height:38px;border-radius:12px;border:none;background:var(--ink);color:var(--paper);
+    cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    transition:transform 0.12s ease;
+  }
+  .send:active{transform:scale(0.92);}
+
+  .palette-hint{
+    font-size:11px;color:var(--ink-faint);padding:0 26px 14px;margin-top:-8px;
+  }
+  .palette-hint kbd{
+    border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-family:'Inter';font-size:10px;
+    background:var(--paper);
+  }
+
+  @media (max-width:720px){
+    .app{grid-template-columns:1fr;height:100vh;border-radius:0;}
+    .sidebar{display:none;}
+    .wordmark{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wordmark">silence<span>The concept</span></div>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="search">
+      <input type="text" placeholder="Поиск или /команда">
+      <p class="hint">Открывается в фокусе поиска — не лента</p>
+    </div>
+    <div class="thread-list">
+      <div class="thread active">
+        <div class="avatar">АИ</div>
+        <div style="flex:1;min-width:0;">
+          <p class="thread-name">Алина</p>
+          <p class="thread-status">ответит позже</p>
+        </div>
+        <div class="dot"></div>
+      </div>
+      <div class="thread">
+        <div class="avatar">ДК</div>
+        <div style="flex:1;min-width:0;">
+          <p class="thread-name">Дима</p>
+          <p class="thread-status">в сети</p>
+        </div>
+      </div>
+      <div class="thread">
+        <div class="avatar">МТ</div>
+        <div style="flex:1;min-width:0;">
+          <p class="thread-name">Матан, группа</p>
+          <p class="thread-status">3 темы за день</p>
+        </div>
+      </div>
+      <div class="thread">
+        <div class="avatar">НК</div>
+        <div style="flex:1;min-width:0;">
+          <p class="thread-name">Настя</p>
+          <p class="thread-status">заглушено на день</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <section class="chat">
+    <div class="chat-header">
+      <div>
+        <h2>Алина</h2>
+        <p>ответит позже · сейчас не в сети мыслями</p>
+      </div>
+      <button class="icon-btn" title="Закреплённые">📌</button>
+    </div>
+
+    <div class="messages" id="messages">
+      <div class="day-label">сегодня</div>
+      <div class="msg in">Скинь конспект по анализу?</div>
+      <div class="msg out">Сейчас найду<span class="pin">📌</span></div>
+      <div class="msg voice">🎤 голосовое, 0:12 → «до вечера пришлю точно»</div>
+    </div>
+
+    <div class="palette-hint"><kbd>/</kbd> — команды: напомнить, заглушить, найти сообщение</div>
+
+    <div class="composer">
+      <textarea class="composer-box" id="input" placeholder="Сообщение или / для команды" rows="1"></textarea>
+      <button class="send" id="sendBtn" aria-label="Отправить">↑</button>
+    </div>
+  </section>
+</div>
+
+<script>
+  const input = document.getElementById('input');
+  const sendBtn = document.getElementById('sendBtn');
+  const messages = document.getElementById('messages');
+
+  function send(){
+    const text = input.value.trim();
+    if(!text) return;
+    const div = document.createElement('div');
+    div.className = 'msg out';
+    div.textContent = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+    input.value = '';
+  }
+
+  sendBtn.addEventListener('click', send);
+  input.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' && !e.shiftKey){
+      e.preventDefault();
+      send();
+    }
+  });
+</script>
+
+</body>
+</html>
