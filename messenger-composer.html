@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Тихо — интерфейс отправки сообщений</title>
+<title>Quiet — message composer interface</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,500;0,600;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>
@@ -151,15 +151,15 @@
 <div>
   <div class="app">
     <div class="chat-header">
-      <div class="avatar">АИ</div>
+      <div class="avatar">AL</div>
       <div>
-        <h2>Алина</h2>
-        <p>ответит позже</p>
+        <h2>Alina</h2>
+        <p>will reply later</p>
       </div>
     </div>
 
     <div class="messages" id="messages">
-      <div class="msg in show">Скинь конспект по линейной алгебре?</div>
+      <div class="msg in show">Can you send me the linear algebra notes?</div>
     </div>
 
     <div class="preview" id="preview"></div>
@@ -178,7 +178,7 @@
           <line x1="12" x2="12" y1="19" y2="22"/>
         </svg>
       </div>
-      <span class="tool-hint" id="toolHint">/latex — отправить формулу</span>
+      <span class="tool-hint" id="toolHint">/latex — send a formula</span>
     </div>
 
     <div class="composer">
@@ -186,7 +186,7 @@
       <button class="send">↑</button>
     </div>
   </div>
-  <p class="caption">Демо по кругу: вложение файла → формула через «/latex» → голосовое сообщение с расшифровкой.</p>
+  <p class="caption">Demo cycles through: file attachment → formula via "/latex" → voice message with transcription.</p>
 </div>
 
 <script>
@@ -231,7 +231,7 @@
 
   // --- Scenario 1: file attachment ---
   async function demoAttach(){
-    toolHint.textContent = 'нажмите 📎, чтобы прикрепить файл';
+    toolHint.textContent = 'click 📎 to attach a file';
     attachBtn.classList.add('active');
     await sleep(600);
 
@@ -251,7 +251,7 @@
     attachBtn.classList.remove('active');
     addMessage(
       '<div class="file-icon">📄</div>' +
-      '<div class="file-meta"><p>lecture-linear-algebra.pdf</p><span>2.4 MB · отправлено</span></div>',
+      '<div class="file-meta"><p>lecture-linear-algebra.pdf</p><span>2.4 MB · sent</span></div>',
       'file demo'
     );
     await sleep(2600);
@@ -259,7 +259,7 @@
 
   // --- Scenario 2: /latex command ---
   async function demoLatex(){
-    toolHint.textContent = '/latex — отправить формулу';
+    toolHint.textContent = '/latex — send a formula';
     await typeRaw('/latex', 90, 'cmd-part');
     await sleep(400);
 
@@ -296,7 +296,7 @@
 
   // --- Scenario 3: voice input ---
   async function demoVoice(){
-    toolHint.textContent = 'удерживайте 🎙, чтобы записать голосовое';
+    toolHint.textContent = 'hold 🎙 to record voice';
     micBtn.classList.add('active');
     composerBox.classList.add('voice-mode');
 
@@ -327,7 +327,7 @@
     ).join('');
     addMessage(
       '<div class="wave-mini">' + miniBars + '</div>' +
-      '<span>0:03 → «Отправь, пожалуйста, конспект»</span>',
+      '<span>0:03 → "Send me the notes, please"</span>',
       'voice demo'
     );
     await sleep(2800);

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiet — opportunities</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#161615;
+    --ink-soft:#6b6a63;
+    --ink-faint:#a4a299;
+    --paper:#fbfaf7;
+    --panel:#ffffff;
+    --line:#e7e4dc;
+    --sage:#4f6f63;
+    --sage-tint:#e7efec;
+    --clay:#c96a5c;
+    --clay-tint:#f8e9e6;
+    --clay-ink:#8a3d31;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.6;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 32px;}
+
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:26px 32px;border-bottom:1px solid var(--line);
+  }
+  .dot-mark{width:10px;height:10px;border-radius:50%;background:var(--ink);}
+  .topbar .label{font-size:12px;letter-spacing:0.16em;font-weight:600;color:var(--ink-soft);text-transform:uppercase;}
+
+  header.hero{padding:56px 0 32px;text-align:center;}
+  header.hero .kicker{font-size:12px;letter-spacing:0.14em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:14px;}
+  header.hero h1{font-family:'EB Garamond',Georgia,serif;font-weight:400;font-size:34px;line-height:1.25;max-width:640px;margin:0 auto;}
+  header.hero p{color:var(--ink-soft);font-size:15px;margin-top:14px;max-width:520px;margin-left:auto;margin-right:auto;}
+
+  .tabs{
+    display:flex;justify-content:center;gap:6px;flex-wrap:wrap;padding:0 0 40px;
+  }
+  .tab-btn{
+    font-family:'Inter',sans-serif;font-size:13.5px;font-weight:500;color:var(--ink-soft);
+    background:var(--panel);border:1px solid var(--line);border-radius:20px;
+    padding:9px 18px;cursor:pointer;transition:background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  .tab-btn:hover{border-color:var(--ink-faint);}
+  .tab-btn.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+
+  .stage{
+    border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--panel);
+    box-shadow:0 30px 70px -40px rgba(22,22,21,0.25);margin-bottom:60px;
+  }
+  .stage-frame{width:100%;height:720px;border:none;display:block;background:var(--paper);}
+
+  .stage-caption{
+    padding:16px 24px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-soft);
+    display:flex;align-items:center;gap:10px;
+  }
+  .stage-caption .swatch{width:8px;height:8px;border-radius:50%;background:var(--sage);flex-shrink:0;}
+
+  footer{padding:30px 32px;display:flex;justify-content:space-between;font-size:12px;color:var(--ink-faint);border-top:1px solid var(--line);}
+
+  @media(max-width:720px){
+    header.hero h1{font-size:26px;}
+    .stage-frame{height:640px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="dot-mark"></div>
+  <div class="label">quiet · opportunities</div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="kicker">Live demos</div>
+    <h1>Four ideas on how a conversation can do more while staying quiet</h1>
+    <p>Switch between tabs — each shows a different interface animation in action.</p>
+  </header>
+
+  <div class="tabs" id="tabs">
+    <button class="tab-btn active" data-src="messenger-composer.html">Composer</button>
+    <button class="tab-btn" data-src="messenger-code-together.html">Code together</button>
+    <button class="tab-btn" data-src="messenger-canvas-together.html">Shared canvas</button>
+    <button class="tab-btn" data-src="messenger-document-together.html">Shared document</button>
+  </div>
+
+  <div class="stage">
+    <iframe class="stage-frame" id="stageFrame" src="messenger-composer.html" loading="lazy" scrolling="no"></iframe>
+    <div class="stage-caption">
+      <span class="swatch"></span>
+      <span id="stageCaption">Files, LaTeX, and voice input in a single composer.</span>
+    </div>
+  </div>
+
+  <footer>
+    <span>© quiet, 2026</span>
+    <span>showcase of opportunities</span>
+  </footer>
+</div>
+
+<script>
+  const captions = {
+    'messenger-composer.html': 'Files, LaTeX, and voice input in a single composer.',
+    'messenger-code-together.html': 'Code panel opens next to the chat — two cursors write simultaneously.',
+    'messenger-canvas-together.html': 'Shared canvas: vectors are drawn together, each in their own color.',
+    'messenger-document-together.html': 'The conversation turns into a shared checklist that both edit.',
+  };
+
+  const tabs = document.querySelectorAll('.tab-btn');
+  const frame = document.getElementById('stageFrame');
+  const captionEl = document.getElementById('stageCaption');
+
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const src = btn.dataset.src;
+      frame.src = src; // reassigning restarts the demo's animation loop
+      captionEl.textContent = captions[src];
+    });
+  });
+</script>
+
+</body>
+</html>
